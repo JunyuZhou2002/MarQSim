@@ -1,0 +1,5 @@
+reduction data
+     CNOT  Total  std
+0.8
+0.6
+0.2

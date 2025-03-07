@@ -1,0 +1,8 @@
+molecule,num,list1,epsilon_list_1,excute_time,sampling_time
+
+BeH2_unf,1,"1.0,0.0,0.0,0.4,0.6,0.0,0.4,0.3,0.3","0.025",0.15,1
+
+
+
+
+
