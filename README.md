@@ -36,8 +36,8 @@ You can now use your favorite Jupyter notebook frontend to execute the code (vsc
 
 ## Results
 
-Layout may be different from the original paper. Slight variation is expected as the simulation and MarQSim itself introduces randomness.
+Layout may be different from the original paper. Slight variation is expected as the simulation and MarQSim itself introduces randomness. The following section shows how to obtain result for each figure/table from the paper.
 
-**Figures**:
+**Figure 14**: Execute `src/Overall Improvement/exp.py`. The result will be output under `ion/` folders.
 
 **Tables**:
