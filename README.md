@@ -38,7 +38,7 @@ You can now use your favorite Jupyter notebook frontend to execute the code (vsc
 
 Layout may be different from the original paper. Slight variation is expected as the simulation and MarQSim itself introduces randomness. The following section shows how to obtain result for each figure/table from the paper.
 
-**Figure 14**: Execute `src/Overall Improvement/exp.py`. The output will be placed in the different directories under `src/Overall Improvement/`, with different molecule/ion names on it.
+**Figure 14**: Execute `src/Overall Improvement/exp.py`. The output will be placed in the different directories under `src/Overall Improvement/`, with different molecule/ion names on it. Usually molecule/ion with 8 qubit take hours to compile while molecule/ion with 12/14 qubit can take days (molecule/ion size can be seen in `Table 1`).
 
 **Figure 15**: Execute `src/Varying Transition Matrix Combination/exp.py`. The output will be placed in the different directories under `src/Varying Transition Matrix Combination/`, with different molecule/ion names on it.
 
