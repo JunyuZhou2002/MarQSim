@@ -40,7 +40,7 @@ Layout may be different from the original paper. Slight variation is expected as
 
 **Figure 14**: Execute `src/Overall Improvement/exp.py`. The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Overall Improvement/`, with different molecule/ion names on it. Usually molecule/ion with 8 qubit take hours to compile while molecule/ion with 12/14 qubit can take days (molecule/ion size can be seen in `Table 1`).
 
-**Figure 15**: Execute `src/Varying Transition Matrix Combination/exp.py`. The output will be placed in the different directories under `src/Varying Transition Matrix Combination/`, with different molecule/ion names on it.
+**Figure 15**: Execute `src/Varying Transition Matrix Combination/exp.py`. The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Varying Transition Matrix Combination/`, with different molecule/ion names on it.
 
 **Figure 16**: Execute `src/Matrix Spectra/exp.py`. The graph output will be placed in the same directory.
 
