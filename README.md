@@ -42,4 +42,7 @@ Layout may be different from the original paper. Slight variation is expected as
 
 **Figure 14**: Execute `src/Varying Transition Matrix Combination/exp.py`. The output will be placed in the different directories under `src/Varying Transition Matrix Combination/`, with different molecule/ion names on it.
 
+**Figure 16**: Execute `src/Impact of Evolution Time/exp.py`. The output will be placed in the different directories under `src/Impact of Evolution Time/`, with different molecule/ion names on it. The file `1.txt`/`1.png`, `2.txt`/`2.png`, `3.txt`/`3.png`, and `4.txt`/`4.png` corresponding to evolution time $\pi/6$, $\pi/3$, $\pi/2$, and $3*\pi/4$ respectively.
+
+
 **Tables**:
