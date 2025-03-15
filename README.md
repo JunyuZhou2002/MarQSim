@@ -47,4 +47,4 @@ Layout may be different from the original paper. Slight variation is expected as
 **Figure 17**: Execute `src/Impact of Evolution Time/exp.py`. The output will be placed in the different directories under `src/Impact of Evolution Time/`, with different molecule/ion names on it. The file `result1.txt`/`photo1.png`, `result2.txt`/`photo2.png`, `result3.txt`/`photo3.png`, and `result4.txt`/`photo4.png` corresponding to evolution time $\pi/6$, $\pi/3$, $\pi/2$, and $3*\pi/4$ respectively.
 
 
-**Tables**:
+**Tables2**: Execute `src/Compilation Time/exp.py`. The output: `result.txt` will be placed in the different directories under `src/Compilation Time/`, with different qubit/Pauli string number combination (`Pauli_x_y` refers to a Hamiltonian with x qubits and y Pauli strings).
