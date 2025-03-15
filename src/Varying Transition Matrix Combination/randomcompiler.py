@@ -17,7 +17,7 @@ import time
 
 t0 = time.time()
 device = 'cuda'
-torch.set_default_dtype(torch.float64)      
+torch.set_default_dtype(torch.float64)        
 np.random.seed(2012)
 
 # This function pull out the pauli string information contained in the file _Pauli_string_, 
@@ -666,22 +666,6 @@ print(t1 - t0, file=output_file)
 ###########################################################################
 # Date processing
 
-def total_data(CNOT_numses, single_q_numses, errors, t, lam):
-    N_list = [int(2.0 * lam * lam * t * t / error)+1 for error in errors]
-    # print(N_list)
-    N_num = N_list
-    for i in range(19):
-        N_num = N_num + N_list
-    N_numses = []
-    for i in range(3):
-        N_numses.append(N_num)
-    gate_numses = []
-    for i in range(len(CNOT_numses)):
-        gate = [x + y for x, y in zip(CNOT_numses[i], single_q_numses[i])]
-        gate = [x + y for x, y in zip(gate, N_numses[i])]
-        gate_numses.append(gate)
-    return gate_numses
-
 def drop_min_elements(nums):
     # Check if the list has at least 2 elements
     if len(nums) < 2:
@@ -702,30 +686,23 @@ def drop_min_elements(nums):
 def model_function(x, a, b, c):
     return a + np.exp(b*x+c)
 
-
-total_numses = total_data(CNOT_numses, single_q_numses, epsilon_list, excute_time, h_sum)
-# CNOT_numses = single_q_numses
-
-
 # clustering
 acc_clusters_1 = [drop_min_elements(acc_reses[0][i::7]) for i in range(7)]
 acc_final_1 = np.array([sum(acc_clusters_1[i])/len(acc_clusters_1[i]) for i in range(len(acc_clusters_1))])
 acc_std_1 = [np.std(acc_clusters_1[i]) for i in range(len(acc_clusters_1))]
 CNOT_clusters_1 = np.array([sum(CNOT_numses[0][i::7])/len(CNOT_numses[0][i::7]) for i in range(7)])
-total_clusters_1 = np.array([sum(total_numses[0][i::7])/len(total_numses[0][i::7]) for i in range(7)])
-single_clusters_1 = np.array([sum(single_q_numses[0][i::7])/len(single_q_numses[0][i::7]) for i in range(7)])
 acc_clusters_2 = [drop_min_elements(acc_reses[1][i::7]) for i in range(7)]
 acc_final_2 = np.array([sum(acc_clusters_2[i])/len(acc_clusters_2[i]) for i in range(len(acc_clusters_2))])
 acc_std_2 = [np.std(acc_clusters_2[i]) for i in range(len(acc_clusters_2))]
 CNOT_clusters_2 = np.array([sum(CNOT_numses[1][i::7])/len(CNOT_numses[1][i::7]) for i in range(7)])
-total_clusters_2 = np.array([sum(total_numses[1][i::7])/len(total_numses[1][i::7]) for i in range(7)])
-single_clusters_2 = np.array([sum(single_q_numses[1][i::7])/len(single_q_numses[1][i::7]) for i in range(7)])
 acc_clusters_3 = [drop_min_elements(acc_reses[2][i::7]) for i in range(7)]
 acc_final_3 = np.array([sum(acc_clusters_3[i])/len(acc_clusters_3[i]) for i in range(len(acc_clusters_3))])
 acc_std_3 = [np.std(acc_clusters_3[i]) for i in range(len(acc_clusters_3))]
 CNOT_clusters_3 = np.array([sum(CNOT_numses[2][i::7])/len(CNOT_numses[2][i::7]) for i in range(7)])
-total_clusters_3 = np.array([sum(total_numses[2][i::7])/len(total_numses[2][i::7]) for i in range(7)])
-single_clusters_3 = np.array([sum(single_q_numses[2][i::7])/len(single_q_numses[2][i::7]) for i in range(7)])
+acc_clusters_4 = [drop_min_elements(acc_reses[3][i::7]) for i in range(7)]
+acc_final_4 = np.array([sum(acc_clusters_4[i])/len(acc_clusters_4[i]) for i in range(len(acc_clusters_4))])
+acc_std_4 = [np.std(acc_clusters_4[i]) for i in range(len(acc_clusters_4))]
+CNOT_clusters_4 = np.array([sum(CNOT_numses[3][i::7])/len(CNOT_numses[3][i::7]) for i in range(7)])
 
 
 x_list = np.array([0.992, 0.9925, 0.993, 0.9935, 0.994])
@@ -736,54 +713,21 @@ params2, _ = curve_fit(model_function, acc_final_2, CNOT_clusters_2)
 a_fit2, b_fit2, c_fit2 = params2
 params3, _ = curve_fit(model_function, acc_final_3, CNOT_clusters_3)
 a_fit3, b_fit3, c_fit3 = params3
+params4, _ = curve_fit(model_function, acc_final_4, CNOT_clusters_4)
+a_fit4, b_fit4, c_fit4 = params4
 y_fit_CNOT1 = model_function(x_list, a_fit1, b_fit1, c_fit1)
 y_fit_CNOT2 = model_function(x_list, a_fit2, b_fit2, c_fit2)
 y_fit_CNOT3 = model_function(x_list, a_fit3, b_fit3, c_fit3)
+y_fit_CNOT4 = model_function(x_list, a_fit4, b_fit4, c_fit4)
 reduce12 = (sum(y_fit_CNOT1)-sum(y_fit_CNOT2))/sum(y_fit_CNOT1)
 reduce13 = (sum(y_fit_CNOT1)-sum(y_fit_CNOT3))/sum(y_fit_CNOT1)
-print("MarQSim-GC CNOT reduction:", file=output_file)
+reduce14 = (sum(y_fit_CNOT1)-sum(y_fit_CNOT4))/sum(y_fit_CNOT1)
+print("MarQSim-0.2GC CNOT reduction:", file=output_file)
 print("{:.3g}%".format(reduce12 * 100), file=output_file)
-print("MarQSim-GC-RP CNOT reduction:", file=output_file)
+print("MarQSim-0.6GC CNOT reduction:", file=output_file)
 print("{:.3g}%".format(reduce13 * 100), file=output_file)
-
-# total gate reduction
-params1, _ = curve_fit(model_function, acc_final_1, total_clusters_1)
-a_fit1, b_fit1, c_fit1 = params1
-params2, _ = curve_fit(model_function, acc_final_2, total_clusters_2)
-a_fit2, b_fit2, c_fit2 = params2
-params3, _ = curve_fit(model_function, acc_final_3, total_clusters_3)
-a_fit3, b_fit3, c_fit3 = params3
-y_fit_total1 = model_function(x_list, a_fit1, b_fit1, c_fit1)
-y_fit_total2 = model_function(x_list, a_fit2, b_fit2, c_fit2)
-y_fit_total3 = model_function(x_list, a_fit3, b_fit3, c_fit3)
-reduce12 = (sum(y_fit_total1)-sum(y_fit_total2))/sum(y_fit_total1)
-reduce13 = (sum(y_fit_total1)-sum(y_fit_total3))/sum(y_fit_total1)
-print("MarQSim-GC total gate reduction:", file=output_file)
-print("{:.3g}%".format(reduce12 * 100), file=output_file)
-print("MarQSim-GC-RP total gate reduction:", file=output_file)
-print("{:.3g}%".format(reduce13 * 100), file=output_file)
-
-# one qubit gate reduction
-params1, _ = curve_fit(model_function, acc_final_1, single_clusters_1)
-a_fit1, b_fit1, c_fit1 = params1
-params2, _ = curve_fit(model_function, acc_final_2, single_clusters_2)
-a_fit2, b_fit2, c_fit2 = params2
-params3, _ = curve_fit(model_function, acc_final_3, single_clusters_3)
-a_fit3, b_fit3, c_fit3 = params3
-y_fit_single1 = model_function(x_list, a_fit1, b_fit1, c_fit1)
-y_fit_single2 = model_function(x_list, a_fit2, b_fit2, c_fit2)
-y_fit_single3 = model_function(x_list, a_fit3, b_fit3, c_fit3)
-reduce12 = (sum(y_fit_single1)-sum(y_fit_single2))/sum(y_fit_single1)
-reduce13 = (sum(y_fit_single1)-sum(y_fit_single3))/sum(y_fit_single1)
-print("MarQSim-GC single qubit gate reduction:", file=output_file)
-print("{:.3g}%".format(reduce12 * 100), file=output_file)
-print("MarQSim-GC-RP single reduction:", file=output_file)
-print("{:.3g}%".format(reduce13 * 100), file=output_file)
-
-# calculate the standard deviation reduction
-reduce_std = (sum(acc_std_2)-sum(acc_std_3))/sum(acc_std_2)
-print("MarQSim-GC-RP standard deviation reduction:", file=output_file)
-print("{:.3g}%".format(reduce_std * 100), file=output_file)
+print("MarQSim-0.8GC CNOT reduction:", file=output_file)
+print("{:.3g}%".format(reduce14 * 100), file=output_file)
 
 # Figure plot
 params1, _ = curve_fit(model_function, acc_final_1, CNOT_clusters_1)
@@ -792,14 +736,18 @@ params2, _ = curve_fit(model_function, acc_final_2, CNOT_clusters_2)
 a_fit2, b_fit2, c_fit2 = params2
 params3, _ = curve_fit(model_function, acc_final_3, CNOT_clusters_3)
 a_fit3, b_fit3, c_fit3 = params3
+params4, _ = curve_fit(model_function, acc_final_4, CNOT_clusters_4)
+a_fit4, b_fit4, c_fit4 = params4
 y_fit1 = model_function(acc_final_1, a_fit1, b_fit1, c_fit1)
 y_fit2 = model_function(acc_final_2, a_fit2, b_fit2, c_fit2)
 y_fit3 = model_function(acc_final_3, a_fit3, b_fit3, c_fit3)
+y_fit4 = model_function(acc_final_4, a_fit4, b_fit4, c_fit4)
 
 plt.figure(figsize=(8, 8)) 
 plt.errorbar(acc_final_1, y_fit1, xerr=acc_std_1, fmt='-x', markersize=16, capsize=7, label='Baseline', color='b', linewidth=2)
-plt.errorbar(acc_final_2, y_fit2, xerr=acc_std_2, fmt='-^', markersize=16, capsize=7, label='MarQSim-GC', color='g', linewidth=2)
-plt.errorbar(acc_final_3, y_fit3, xerr=acc_std_3, fmt='-o', markersize=16, capsize=7, label='MarQSim-GC-RP', color='y', linewidth=2)
+plt.errorbar(acc_final_2, y_fit2, xerr=acc_std_2, fmt='-^', markersize=16, capsize=7, label='MarQSim-0.2GC', color='g', linewidth=2)
+plt.errorbar(acc_final_3, y_fit3, xerr=acc_std_3, fmt='-o', markersize=16, capsize=7, label='MarQSim-0.6GC', color='y', linewidth=2)
+plt.errorbar(acc_final_4, y_fit4, xerr=acc_std_4, fmt='-s', markersize=16, capsize=7, label='MarQSim-0.8GC', color='r', linewidth=2)
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
 plt.tick_params(axis='x', labelsize=20)
 plt.tick_params(axis='y', labelsize=20)

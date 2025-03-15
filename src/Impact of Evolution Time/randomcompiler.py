@@ -17,7 +17,9 @@ import time
 
 t0 = time.time()
 device = 'cuda'
-torch.set_default_dtype(torch.float64)      
+torch.set_default_tensor_type(torch.DoubleTensor)
+# torch.backends.cuda.matmul.allow_tf32 = False  
+# torch.backends.cudnn.allow_tf32 = False        
 np.random.seed(2012)
 
 # This function pull out the pauli string information contained in the file _Pauli_string_, 
@@ -553,9 +555,9 @@ def operation(
     
 
     sum_matrix = np.zeros((len(input_pauli),len(input_pauli)))
-    for i in range(100):
+    for i in range(2):
         sum_matrix += get_markov_2(input_pauli=input_pauli)
-    P_2 = sum_matrix/100
+    P_2 = sum_matrix/2
     np.save(path + '/MarQSim-GC-RP.npy', P_2)
     # 100
 
@@ -641,7 +643,7 @@ P_1 = np.load(args.file + '/MarQSim-GC.npy')
 P_2 = np.load(args.file + '/MarQSim-GC-RP.npy')
 
 
-file_name = args.file + '//' + 'result' + '.txt'
+file_name = args.file + '//' + 'result' + str(args.num) + '.txt'
 # str(args.num)
 output_file = open(file=file_name, mode="a", encoding='utf-8')
 print('lam_list\n', lam_list, file=output_file)
@@ -809,7 +811,7 @@ plt.tick_params(axis='y', labelsize=20)
 plt.xlabel('CNOT Gate Count', fontsize=20)
 plt.ylabel('Accuracy', fontsize=20)
 plt.legend(loc='upper left', fontsize=20)
-plt.savefig(args.file + '//photo' + '.png')
+plt.savefig(args.file + '//photo'  + str(args.num) + '.png')
 
 
 # commend line

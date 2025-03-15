@@ -6,6 +6,8 @@ import torch
 from tqdm import tqdm
 import random
 from scipy.optimize import curve_fit
+import pandas as pd
+import csv
 
 import sys
 
@@ -496,6 +498,24 @@ def complex_angle_3(op_1, op_2):
 
     return acc
 
+def read_csv(filename: str):
+    with open(filename, "r", encoding="utf-8") as f:
+        csv_a = csv.DictReader(f)
+        sd = []
+        sb = []
+        ob = []
+
+        for row in csv_a:
+            sd.append(float(row["Spectra Distribution"]))
+            sb.append(float(row["Spectra Boundary"]))
+            ob.append(float(row["Original Boundary"]))
+
+        return {
+            "Spectra Distribution": sd,
+            "Spectra Boundary": sb,
+            "Original Boundary": ob,
+        }
+
 
 # the main function of this task
 # the return are 
@@ -546,51 +566,113 @@ def operation(
     # they are pre calculated
     # by using the commend: P_i = get_markov_i(input_pauli=input_pauli), i = 0, 1, 2
     P_0 = get_markov_0(input_pauli=input_pauli)
-    np.save(path + '/QDrift.npy', P_0)
+    np.save('QDrift.npy', P_0)
     
     P_1 = get_markov_1(input_pauli=input_pauli)
-    np.save(path + '/MarQSim-GC.npy', P_1)
+    np.save('MarQSim-GC.npy', P_1)
     
 
     sum_matrix = np.zeros((len(input_pauli),len(input_pauli)))
     for i in range(100):
         sum_matrix += get_markov_2(input_pauli=input_pauli)
     P_2 = sum_matrix/100
-    np.save(path + '/MarQSim-GC-RP.npy', P_2)
+    np.save('MarQSim-GC-RP.npy', P_2)
     # 100
 
+    P_0 = np.load('QDrift.npy')
+    P_1 = np.load('MarQSim-GC.npy')
+    P_2 = np.load('MarQSim-GC-RP.npy')
 
-    P_0 = np.load(path + '/QDrift.npy')
-    P_1 = np.load(path + '/MarQSim-GC.npy')
-    P_2 = np.load(path + '/MarQSim-GC-RP.npy')
+    P1 = 0.4*P_0+0.6*P_1
+    P1_prime = 0.4*P_0+0.3*P_1+0.3*P_2
 
+    P2 = 0.2*P_0+0.8*P_1
+    P2_prime = 0.2*P_0+0.4*P_1+0.4*P_2
 
-    acc_reses, CNOT_num_reses, single_q_num_reses, samples = [], [], [], []
-    for lam in lam_list:
-        P_mix = lam[0] * P_0 + lam[1] * P_1 + lam[2] * P_2
-        acc_res, CNOT_num_res, single_q_num_res, sample = [], [], [], []
-        for idx in range(sampling_time):
-            for epsilon in epsilon_list:
-                output_y_1, CNOT_num, single_q_num, sample_list = random_compiler_1(
-                    input_pauli=copy.deepcopy(Kernel_list), epsilon=epsilon, t=t,
-                    CNOT_matrix=CNOT_matrix, single_q_matrix=single_q_matrix, P_mix=P_mix, pro=pro
-                )
+    eval_1 = np.sort(np.abs(np.linalg.eigvals(P1)))[::-1]
+    eval_1_prime = np.sort(np.abs(np.linalg.eigvals(P1_prime)))[::-1]
+    spectra_a_dict = {}
+    spectra_a_dict["Spectra Distribution"] = eval_1_prime
+    spectra_a_dict["Spectra Boundary"] = eval_1_prime
+    spectra_a_dict["Original Boundary"] = eval_1
+    df = pd.DataFrame(spectra_a_dict)
+    df.to_csv("eigenspectra_a.csv", index=False)
 
-                output_y_0_0 = output_y_0_0.cpu()
-                output_y_1 = output_y_1.cpu()
-                acc_0 = complex_angle_3(op_1=output_y_0_0, op_2=output_y_1)
-                acc_res.append(acc_0)
-                CNOT_num_res.append(CNOT_num)
-                single_q_num_res.append(single_q_num)
-                sample += sample_list
+    eval_2 = np.sort(np.abs(np.linalg.eigvals(P2)))[::-1]
+    eval_2_prime = np.sort(np.abs(np.linalg.eigvals(P2_prime)))[::-1]
+    spectra_b_dict = {}
+    spectra_b_dict["Spectra Distribution"] = eval_2_prime
+    spectra_b_dict["Spectra Boundary"] = eval_2_prime
+    spectra_b_dict["Original Boundary"] = eval_2
+    df = pd.DataFrame(spectra_b_dict)
+    df.to_csv("eigenspectra_b.csv", index=False)
 
+    data_a = read_csv("eigenspectra_a.csv")
+    data_b = read_csv("eigenspectra_b.csv")
 
-        acc_reses.append(acc_res)
-        CNOT_num_reses.append(CNOT_num_res)
-        single_q_num_reses.append(single_q_num_res)
-        samples.append(count_frequency(sample))
+    x = range(1, len(data_a["Spectra Boundary"]) + 1)
+    xticks = range(1, len(data_a["Spectra Boundary"]) + 1, 10)
 
-    return acc_reses, CNOT_num_reses, single_q_num_reses, samples
+    import matplotlib.pyplot as plt
+
+    plt.rc("font", size=20)
+    plt.rc("mathtext", fontset="cm")
+
+    fig, ax = plt.subplots(1, 2, figsize=(15, 5.5))
+    plt.subplots_adjust(0.06, 0.16, 0.84, 0.93, wspace=0.55)
+
+    plt.subplot(1, 2, 1)
+    plt.bar(x, data_a["Spectra Distribution"], label="Spectrum Distribution ($\\mathbf{P_1}'$)")
+    plt.plot(
+        x, data_a["Spectra Boundary"], color="darkorange", linewidth=5, label="Spectrum of $\\mathbf{P_1}'=0.4\\mathbf{P_{qd}}+0.3\\mathbf{P_{gc}}$\n$+0.3\\mathbf{P_{rp}}$"
+    )
+    plt.plot(
+        x,
+        data_a["Original Boundary"],
+        color="darkgreen",
+        linewidth=4,
+        label="Spectrum of $\\mathbf{P}_{1}=0.4\\mathbf{P_{qd}}+0.6\\mathbf{P_{gc}}$",
+    )
+    plt.title("(a)")
+    plt.ylabel("Spectrum Value")
+    plt.grid(True, axis="both")
+    plt.xticks(xticks, [])
+    plt.xlim(1, len(data_a["Spectra Boundary"]))
+    #get handles and labels
+    handles, labels = plt.gca().get_legend_handles_labels()
+
+    #specify order of items in legend
+    order = [1,0,2]
+
+    #add legend to plot
+    legend = plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order],loc="upper right", bbox_to_anchor=(1.43, 1.02), framealpha=1, edgecolor="black")
+    legend.get_frame().set_edgecolor("black")
+    plt.xlabel("$\\lambda_i$", fontsize=28)
+
+    plt.subplot(1, 2, 2)
+    plt.bar(x, data_b["Spectra Distribution"], label="Spectrum Distribution ($\\mathbf{P_2}'$)")
+    plt.plot(
+        x, data_b["Spectra Boundary"], color="orange", linewidth=5, label="Spectrum of $\\mathbf{P_2}'=0.2\\mathbf{P_{qd}}+0.4\\mathbf{P_{gc}}$\n$+0.4\\mathbf{P_{rp}}$"
+    )
+    plt.plot(
+        x,
+        data_b["Original Boundary"],
+        color="darkgreen",
+        linewidth=4,
+        label="Spectrum of $\\mathbf{P}_{2}=0.2\\mathbf{P_{qd}}+0.8\\mathbf{P_{gc}}$",
+    )
+    plt.title("(b)")
+    plt.grid(True, axis="both")
+    plt.xticks(xticks, [])
+    plt.xlim(1, len(data_a["Spectra Boundary"]))
+    handles, labels = plt.gca().get_legend_handles_labels()
+    legend = plt.legend([handles[idx] for idx in order],[labels[idx] for idx in order],loc="upper right", bbox_to_anchor=(1.5, 1.02), framealpha=1)
+    legend.get_frame().set_edgecolor("black")
+    plt.xlabel("$\\lambda_i$", fontsize=28)
+    
+    plt.savefig("Expspectra.png")
+
+    return 0
 
 
 import matplotlib.pyplot as plt
@@ -628,191 +710,8 @@ excute_time = args.excute_time
 sampling_time = args.sampling_time
 h_sum = args.h_sum
 
-acc_reses, CNOT_numses, single_q_numses = [], [], []
-t0 = time.time()
-
-acc_reses, CNOT_numses, single_q_numses, samples = operation(lam_list=lam_list, t=excute_time, path=args.file,
+operation(lam_list=lam_list, t=excute_time, path=args.file,
                                                     epsilon_list=epsilon_list, sampling_time=sampling_time)
-t1 = time.time()
 
 
-P_0 = np.load(args.file + '/QDrift.npy')
-P_1 = np.load(args.file + '/MarQSim-GC.npy')
-P_2 = np.load(args.file + '/MarQSim-GC-RP.npy')
 
-
-file_name = args.file + '//' + 'result' + '.txt'
-# str(args.num)
-output_file = open(file=file_name, mode="a", encoding='utf-8')
-print('lam_list\n', lam_list, file=output_file)
-print('excute_time\n', excute_time, file=output_file)
-print('epsilon_list_1\n', epsilon_list_1, file=output_file)
-print('sampling_time\n', sampling_time, file=output_file)
-print('acc_reses', file=output_file)
-for acc_res in acc_reses:
-    print(acc_res, file=output_file)
-print('CNOT_numses', file=output_file)
-for CNOT_num in CNOT_numses:
-    print(CNOT_num, file=output_file)
-print('single_q_numses', file=output_file)
-for single_q_num in single_q_numses:
-    print(single_q_num, file=output_file)
-
-
-print('Compilation Time', file=output_file)
-print(t1 - t0, file=output_file)
-
-
-###########################################################################
-# Date processing
-
-def total_data(CNOT_numses, single_q_numses, errors, t, lam):
-    N_list = [int(2.0 * lam * lam * t * t / error)+1 for error in errors]
-    # print(N_list)
-    N_num = N_list
-    for i in range(19):
-        N_num = N_num + N_list
-    N_numses = []
-    for i in range(3):
-        N_numses.append(N_num)
-    gate_numses = []
-    for i in range(len(CNOT_numses)):
-        gate = [x + y for x, y in zip(CNOT_numses[i], single_q_numses[i])]
-        gate = [x + y for x, y in zip(gate, N_numses[i])]
-        gate_numses.append(gate)
-    return gate_numses
-
-def drop_min_elements(nums):
-    # Check if the list has at least 2 elements
-    if len(nums) < 2:
-        return nums  # Nothing to drop
-    
-    # Sort the list in ascending order
-    sorted_nums = sorted(nums)
-    
-    # Remove the first two elements from the sorted list
-    sorted_nums = sorted_nums[2:]
-    
-    # Create a new list with remaining elements
-    result = [num for num in nums if num in sorted_nums]
-    
-    return result
-
-# Define the model function a + b * e^(c * x)
-def model_function(x, a, b, c):
-    return a + np.exp(b*x+c)
-
-
-total_numses = total_data(CNOT_numses, single_q_numses, epsilon_list, excute_time, h_sum)
-# CNOT_numses = single_q_numses
-
-
-# clustering
-acc_clusters_1 = [drop_min_elements(acc_reses[0][i::7]) for i in range(7)]
-acc_final_1 = np.array([sum(acc_clusters_1[i])/len(acc_clusters_1[i]) for i in range(len(acc_clusters_1))])
-acc_std_1 = [np.std(acc_clusters_1[i]) for i in range(len(acc_clusters_1))]
-CNOT_clusters_1 = np.array([sum(CNOT_numses[0][i::7])/len(CNOT_numses[0][i::7]) for i in range(7)])
-total_clusters_1 = np.array([sum(total_numses[0][i::7])/len(total_numses[0][i::7]) for i in range(7)])
-single_clusters_1 = np.array([sum(single_q_numses[0][i::7])/len(single_q_numses[0][i::7]) for i in range(7)])
-acc_clusters_2 = [drop_min_elements(acc_reses[1][i::7]) for i in range(7)]
-acc_final_2 = np.array([sum(acc_clusters_2[i])/len(acc_clusters_2[i]) for i in range(len(acc_clusters_2))])
-acc_std_2 = [np.std(acc_clusters_2[i]) for i in range(len(acc_clusters_2))]
-CNOT_clusters_2 = np.array([sum(CNOT_numses[1][i::7])/len(CNOT_numses[1][i::7]) for i in range(7)])
-total_clusters_2 = np.array([sum(total_numses[1][i::7])/len(total_numses[1][i::7]) for i in range(7)])
-single_clusters_2 = np.array([sum(single_q_numses[1][i::7])/len(single_q_numses[1][i::7]) for i in range(7)])
-acc_clusters_3 = [drop_min_elements(acc_reses[2][i::7]) for i in range(7)]
-acc_final_3 = np.array([sum(acc_clusters_3[i])/len(acc_clusters_3[i]) for i in range(len(acc_clusters_3))])
-acc_std_3 = [np.std(acc_clusters_3[i]) for i in range(len(acc_clusters_3))]
-CNOT_clusters_3 = np.array([sum(CNOT_numses[2][i::7])/len(CNOT_numses[2][i::7]) for i in range(7)])
-total_clusters_3 = np.array([sum(total_numses[2][i::7])/len(total_numses[2][i::7]) for i in range(7)])
-single_clusters_3 = np.array([sum(single_q_numses[2][i::7])/len(single_q_numses[2][i::7]) for i in range(7)])
-
-
-x_list = np.array([0.992, 0.9925, 0.993, 0.9935, 0.994])
-# CNOT gate reduction
-params1, _ = curve_fit(model_function, acc_final_1, CNOT_clusters_1)
-a_fit1, b_fit1, c_fit1 = params1
-params2, _ = curve_fit(model_function, acc_final_2, CNOT_clusters_2)
-a_fit2, b_fit2, c_fit2 = params2
-params3, _ = curve_fit(model_function, acc_final_3, CNOT_clusters_3)
-a_fit3, b_fit3, c_fit3 = params3
-y_fit_CNOT1 = model_function(x_list, a_fit1, b_fit1, c_fit1)
-y_fit_CNOT2 = model_function(x_list, a_fit2, b_fit2, c_fit2)
-y_fit_CNOT3 = model_function(x_list, a_fit3, b_fit3, c_fit3)
-reduce12 = (sum(y_fit_CNOT1)-sum(y_fit_CNOT2))/sum(y_fit_CNOT1)
-reduce13 = (sum(y_fit_CNOT1)-sum(y_fit_CNOT3))/sum(y_fit_CNOT1)
-print("MarQSim-GC CNOT reduction:", file=output_file)
-print("{:.3g}%".format(reduce12 * 100), file=output_file)
-print("MarQSim-GC-RP CNOT reduction:", file=output_file)
-print("{:.3g}%".format(reduce13 * 100), file=output_file)
-
-# total gate reduction
-params1, _ = curve_fit(model_function, acc_final_1, total_clusters_1)
-a_fit1, b_fit1, c_fit1 = params1
-params2, _ = curve_fit(model_function, acc_final_2, total_clusters_2)
-a_fit2, b_fit2, c_fit2 = params2
-params3, _ = curve_fit(model_function, acc_final_3, total_clusters_3)
-a_fit3, b_fit3, c_fit3 = params3
-y_fit_total1 = model_function(x_list, a_fit1, b_fit1, c_fit1)
-y_fit_total2 = model_function(x_list, a_fit2, b_fit2, c_fit2)
-y_fit_total3 = model_function(x_list, a_fit3, b_fit3, c_fit3)
-reduce12 = (sum(y_fit_total1)-sum(y_fit_total2))/sum(y_fit_total1)
-reduce13 = (sum(y_fit_total1)-sum(y_fit_total3))/sum(y_fit_total1)
-print("MarQSim-GC total gate reduction:", file=output_file)
-print("{:.3g}%".format(reduce12 * 100), file=output_file)
-print("MarQSim-GC-RP total gate reduction:", file=output_file)
-print("{:.3g}%".format(reduce13 * 100), file=output_file)
-
-# one qubit gate reduction
-params1, _ = curve_fit(model_function, acc_final_1, single_clusters_1)
-a_fit1, b_fit1, c_fit1 = params1
-params2, _ = curve_fit(model_function, acc_final_2, single_clusters_2)
-a_fit2, b_fit2, c_fit2 = params2
-params3, _ = curve_fit(model_function, acc_final_3, single_clusters_3)
-a_fit3, b_fit3, c_fit3 = params3
-y_fit_single1 = model_function(x_list, a_fit1, b_fit1, c_fit1)
-y_fit_single2 = model_function(x_list, a_fit2, b_fit2, c_fit2)
-y_fit_single3 = model_function(x_list, a_fit3, b_fit3, c_fit3)
-reduce12 = (sum(y_fit_single1)-sum(y_fit_single2))/sum(y_fit_single1)
-reduce13 = (sum(y_fit_single1)-sum(y_fit_single3))/sum(y_fit_single1)
-print("MarQSim-GC single qubit gate reduction:", file=output_file)
-print("{:.3g}%".format(reduce12 * 100), file=output_file)
-print("MarQSim-GC-RP single reduction:", file=output_file)
-print("{:.3g}%".format(reduce13 * 100), file=output_file)
-
-# calculate the standard deviation reduction
-reduce_std = (sum(acc_std_2)-sum(acc_std_3))/sum(acc_std_2)
-print("MarQSim-GC-RP standard deviation reduction:", file=output_file)
-print("{:.3g}%".format(reduce_std * 100), file=output_file)
-
-# Figure plot
-params1, _ = curve_fit(model_function, acc_final_1, CNOT_clusters_1)
-a_fit1, b_fit1, c_fit1 = params1
-params2, _ = curve_fit(model_function, acc_final_2, CNOT_clusters_2)
-a_fit2, b_fit2, c_fit2 = params2
-params3, _ = curve_fit(model_function, acc_final_3, CNOT_clusters_3)
-a_fit3, b_fit3, c_fit3 = params3
-y_fit1 = model_function(acc_final_1, a_fit1, b_fit1, c_fit1)
-y_fit2 = model_function(acc_final_2, a_fit2, b_fit2, c_fit2)
-y_fit3 = model_function(acc_final_3, a_fit3, b_fit3, c_fit3)
-
-plt.figure(figsize=(8, 8)) 
-plt.errorbar(acc_final_1, y_fit1, xerr=acc_std_1, fmt='-x', markersize=16, capsize=7, label='Baseline', color='b', linewidth=2)
-plt.errorbar(acc_final_2, y_fit2, xerr=acc_std_2, fmt='-^', markersize=16, capsize=7, label='MarQSim-GC', color='g', linewidth=2)
-plt.errorbar(acc_final_3, y_fit3, xerr=acc_std_3, fmt='-o', markersize=16, capsize=7, label='MarQSim-GC-RP', color='y', linewidth=2)
-plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-plt.tick_params(axis='x', labelsize=20)
-plt.tick_params(axis='y', labelsize=20)
-# plt.show()
-
-# Customize the plot
-plt.xlabel('CNOT Gate Count', fontsize=20)
-plt.ylabel('Accuracy', fontsize=20)
-plt.legend(loc='upper left', fontsize=20)
-plt.savefig(args.file + '//photo' + '.png')
-
-
-# commend line
-'''
-python randomcompiler.py --file=Pauli_Na+ --num=1 --list1=1.0,0.0,0.0,0.4,0.6,0.0,0.4,0.3,0.3 --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --excute_time=0.785 --sampling_time=20 --h_sum=10.456
-'''
