@@ -1,2 +1,7 @@
 .MarQSim/
 /**/.DS_Store
+/venv/
+/.venv/
+/**/Pauli_*/*.npy
+/**/Pauli_*/*.png
+/**/Pauli_*/*.txt

@@ -48,3 +48,9 @@ Layout may be different from the original paper. Slight variation is expected as
 
 
 **Tables2**: Execute `src/Compilation Time/exp.py`. The output: `result.txt` will be placed in the different directories under `src/Compilation Time/`, with different qubit/Pauli string number combination (`Pauli_x_y` refers to a Hamiltonian with x qubits and y Pauli strings).
+
+## Code Structure
+
+`exp.py` in each folder is the driver that executes the random compiler with different parameters.
+
+`randomcompiler.py` is the implementation of MarQSim algorithm.
