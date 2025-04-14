@@ -38,18 +38,18 @@ You can now use your favorite Jupyter notebook frontend to execute the code (vsc
 
 Layout may be different from the original paper. Slight variation is expected as the simulation and MarQSim itself introduces randomness. The following section shows how to obtain result for each figure/table from the paper.
 
-**Figure 14**: Execute `python3 "src/Overall Improvement/exp.py"`. The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Overall Improvement/`, with different molecule/ion names on it. Usually molecule/ion with 8 qubit take hours to compile while molecule/ion with 12/14 qubit can take days (molecule/ion size can be seen in `Table 1`).
+**Figure 14**: Execute `src/Overall Improvement/exp.py` (go to the folder and then execute `python3 exp.py`). The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Overall Improvement/`, with different molecule/ion names on it. Usually molecule/ion with 8 qubit take hours to compile while molecule/ion with 12/14 qubit can take days (molecule/ion size can be seen in `Table 1`).
 
 **Incrementally Gathering the Data**: We support incrementally collecting the samples for Figure 14. Please refer to `exp.py` in the `src/Overall Parallel/` folder.
 
-**Figure 15**: Execute `python3 "src/Varying Transition Matrix Combination/exp.py"`. The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Varying Transition Matrix Combination/`, with different molecule/ion names on it.
+**Figure 15**: Execute `src/Varying Transition Matrix Combination/exp.py`. The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Varying Transition Matrix Combination/`, with different molecule/ion names on it.
 
-**Figure 16**: Execute `python3 "src/Matrix Spectra/exp.py"`. The graph output will be placed in the same directory.
+**Figure 16**: Execute `src/Matrix Spectra/exp.py`. The graph output will be placed in the same directory.
 
-**Figure 17**: Execute `python3 "src/Impact of Evolution Time/exp.py"`. The output will be placed in the different directories under `src/Impact of Evolution Time/`, with different molecule/ion names on it. The file `result1.txt`/`photo1.png`, `result2.txt`/`photo2.png`, `result3.txt`/`photo3.png`, and `result4.txt`/`photo4.png` corresponding to evolution time $\pi/6$, $\pi/3$, $\pi/2$, and $3*\pi/4$ respectively.
+**Figure 17**: Execute `src/Impact of Evolution Time/exp.py`. The output will be placed in the different directories under `src/Impact of Evolution Time/`, with different molecule/ion names on it. The file `result1.txt`/`photo1.png`, `result2.txt`/`photo2.png`, `result3.txt`/`photo3.png`, and `result4.txt`/`photo4.png` corresponding to evolution time $\pi/6$, $\pi/3$, $\pi/2$, and $3*\pi/4$ respectively.
 
 
-**Tables2**: Execute `python3 "src/Compilation Time/exp.py"`. The output: `result.txt` will be placed in the different directories under `src/Compilation Time/`, with different qubit/Pauli string number combination (`Pauli_x_y` refers to a Hamiltonian with x qubits and y Pauli strings).
+**Tables2**: Execute `src/Compilation Time/exp.py`. The output: `result.txt` will be placed in the different directories under `src/Compilation Time/`, with different qubit/Pauli string number combination (`Pauli_x_y` refers to a Hamiltonian with x qubits and y Pauli strings).
 
 ## Code Structure
 
