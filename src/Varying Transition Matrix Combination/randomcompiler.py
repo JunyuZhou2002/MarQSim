@@ -754,8 +754,8 @@ plt.tick_params(axis='y', labelsize=20)
 # plt.show()
 
 # Customize the plot
-plt.xlabel('CNOT Gate Count', fontsize=20)
-plt.ylabel('Accuracy', fontsize=20)
+plt.xlabel('Accuracy', fontsize=20)
+plt.ylabel('CNOT Gate Count', fontsize=20)
 plt.legend(loc='upper left', fontsize=20)
 plt.savefig(args.file + '//photo' + '.png')
 
