@@ -110,8 +110,9 @@ def get_single_q_matrix(input_pauli):
     return res
 
 
-# calculate the transition matrix 0, 
+# This function calculate the transition matrix P_qd, 
 # which is constructed by dupilcate the stationary distribution for L times, L stands for the total number of hamiltonian.
+# This means every time we sample Hamiltonian from the same distribution. 
 def get_markov_0(input_pauli):
     string_num = len(input_pauli)
     pro = []
@@ -125,6 +126,9 @@ def get_markov_0(input_pauli):
     return [copy.deepcopy(pro) for iii in range(string_num)]
 
 
+# This function calculates the transition matrix P_gc according to Algorithm 2 in the paper, which is obtained by solving the MCFP problem.
+# We encode the CNOT counts as weights in the Hamiltonian transition network to minimize the total number of CNOT operations.
+# The weight encoding can be adjusted and customized for other optimization objectives.
 def get_markov_1(input_pauli):
 
     string_num = len(input_pauli)
@@ -194,7 +198,8 @@ def get_markov_1(input_pauli):
     return res
 
 
-# give a disturbulent on the CNOT_matrix
+# This function introduces a disturbance to the CNOT_matrix and recalculates the transition matrix P_gc.
+# By repeating this process multiple times and averaging the P_gcs, we obtain P_rp.
 def get_markov_2(input_pauli):
 
     string_num = len(input_pauli)
@@ -300,8 +305,9 @@ def count_frequency(numbers):
 
     return sorted_dict
 
-# this is the compiler for Markov Simulation
-# it returns the CNOT gate and single qubit gate account in the compilation
+# Compiler for MarQSim.
+# Given the P_mix (Markov transition matrix), we sample the circuit following Algorithm 1 in the paper.
+# It returns the CNOT gate and single qubit gate account in the compilation,
 # also return the unique hamiltonian in the sampling
 def random_compiler_1(
         input_pauli,
@@ -466,7 +472,7 @@ from numpy import mat
 epsilon_list_1 = [1.0 / float(i) for i in range(10, 50)]
 
 
-# acculate the fidelity of two matrices
+# calculate the fidelity of two matrices
 def complex_angle_1(vec_1, vec_2):
     list_1, list_2 = mat(vec_1).tolist()[0], mat(vec_2).tolist()[0]
     len_ = len(list_1)
