@@ -1,18 +1,17 @@
 '''
-Experiment Set Up Script. 
-It evaluates gate usage (CNOT and single-qubit), fidelity against exact evolution, and analyzes compilation performance across various sampling strategies and parameter settings.
+Experiment Setup Script.
+This script evaluates the spectrum of various combinations of transition matrices.
 
-Key functionalities include:
-- 1. Support to implement Fig. 14, the Overall Improvement experiment in the paper.
-- 2. Support to implement Fig. 17, the Impact of Evolution Time experiment in the paper.
+Key functionalities:
+- Supports the implementation of Figure 16: the Transition Matrix Spectrum experiment from the paper.
 
-See exp.py on how to execute this file for different experiments.
+Refer to exp.py for instructions on how to execute this script.
 '''
 
 from marqsim import *
 import argparse
 
-parser = argparse.ArgumentParser(description="MarQSim Compiler Experiment Settings")
+parser = argparse.ArgumentParser(description="MarQSim Transition Matrix Spectrum Experiment Settings")
 # Path to the experiment folder. 
 parser.add_argument('--exp_path', help='Name of the experiment. Used to determine the output folder for saving results.')
 # Path to the Pauli string input file 

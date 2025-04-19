@@ -12,7 +12,7 @@ See exp.py on how to execute this file for different experiments.
 from marqsim import *
 import argparse
 
-parser = argparse.ArgumentParser(description="MarQSim Compiler Experiment Settings")
+parser = argparse.ArgumentParser(description="MarQSim Overall Improvement/Impact of Evolution Time Experiment Settings")
 # Path to the experiment folder. 
 parser.add_argument('--exp_path', help='Name of the experiment. Used to determine the output folder for saving results.')
 # Path to the Pauli string input file 

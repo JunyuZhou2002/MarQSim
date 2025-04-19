@@ -1,7 +1,8 @@
-### To process the data in "result.csv", run the following command.
-### This will generate figures in each corresponding folder as before,
-### and the reduction rates will be saved in a file named "reduction.txt".
 '''
+    To process the incrementally gathered data in "result.csv", run the following command.
+    This will generate figures in each corresponding folder,
+    and the reduction rates will be saved in a file named "reduction.txt".
+
     "python3 data.py --file=Pauli_Na+ --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=10.456",
     "python3 data.py --file=Pauli_Cl- --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=11.13",
     "python3 data.py --file=Pauli_Ar --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=14.61",

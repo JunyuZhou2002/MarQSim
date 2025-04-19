@@ -705,12 +705,16 @@ def read_csv(filename: str):
             "Spectra Boundary": sb,
             "Original Boundary": ob,
         }
-    
+
 def spectra_operation(
         file: str,
         path: str,
 ):
-    # epsilon_list=epsilon_list_1
+    
+    '''
+    Performs the data processing operation required for matrix spectrum analysis.
+    '''
+
     input_pauli = get_pauli('Benchmarks' + '//' + '_Pauli_string_' + file[6:])
    
     lamda = 0.0
@@ -844,6 +848,10 @@ def compilation_time_operation(
         epsilon_list: list
 ):
     
+    '''
+    Performs the data processing operation required for compilation time analysis.
+    '''
+
     input_pauli = get_pauli('Benchmarks' + '//' + '_Pauli_string_' + file[6:])
     
     CNOT_matrix = get_CNOT_matrix(input_pauli=input_pauli)
