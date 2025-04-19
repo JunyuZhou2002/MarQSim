@@ -58,6 +58,10 @@ This section shows how to obtain result for each figure/table from the MarQSim p
 
 ## Code Structure
 
-`exp.py` in each folder is the driver that executes the random compiler with different parameters.
+1. `marqsim.py` contains the core functions for implementing the MarQSim compiler as proposed in the paper.
+2. `overall.py`, `overall_parallel.py`, `varying.py`, `spectra.py`, and `compile_time.py` handle sampling and data processing to reproduce the results from our paper, leveraging functionalities from `marqsim.py`.
+3. `exp.py` is a script designed to schedule and run experiments. By parsing different arguments, it allows reproduction of various experiments from the paper.
+4. The Benchmarks folder includes all molecular and ion data used in the experiments. Other folders are empty and used for data collection and result visualization.
 
-`randomcompiler.py` is the implementation of MarQSim algorithm.
+
+## Simulating New Molecule/Ion
