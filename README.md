@@ -38,7 +38,7 @@ You can now use your favorite frontend to execute the code (vscode, browser, etc
 
 This section shows how to obtain result for each figure/table from the MarQSim paper.
 
-**Figure 14**: Execute `python3 exp.py --experiment=overall` under folder `src`. The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Overall_Improvement/`, with different molecule/ion names on it. Usually molecule/ion with 8 qubit take hours to compile while molecule/ion with 12/14 qubit can take days (molecule/ion size can be seen in `Table 1`).
+**Figure 14**: Execute `python3 exp.py --experiment=overall` under folder `src`. The output: `result.txt` and `result.png` will be placed in the different directories under `src/Overall_Improvement/`, with different molecule/ion names on it. A table is provided to illustrate the amount of execution time used to generate the results on our machine.
 
 | Na+   | Cl-   | Ar    | OH-   | HF    | LiH(f) | BeH2(f) | LiH    | H2O    | SYK 1 | SYK 2 | BeH2   |
 |-------|-------|-------|-------|-------|--------|---------|--------|--------|-------|-------|--------|
