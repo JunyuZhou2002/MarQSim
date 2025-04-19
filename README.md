@@ -36,9 +36,13 @@ You can now use your favorite frontend to execute the code (vscode, browser, etc
 
 ## Results
 
-Layout may be different from the original paper. Slight variation is expected as the simulation and MarQSim itself introduces randomness. The following section shows how to obtain result for each figure/table from the paper.
+This section shows how to obtain result for each figure/table from the MarQSim paper.
 
-**Figure 14**: Execute `src/Overall Improvement/exp.py` (go to the folder and then execute `python3 exp.py`). The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Overall Improvement/`, with different molecule/ion names on it. Usually molecule/ion with 8 qubit take hours to compile while molecule/ion with 12/14 qubit can take days (molecule/ion size can be seen in `Table 1`).
+**Figure 14**: Execute `python3 exp.py --experiment=overall` under folder `src`. The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Overall_Improvement/`, with different molecule/ion names on it. Usually molecule/ion with 8 qubit take hours to compile while molecule/ion with 12/14 qubit can take days (molecule/ion size can be seen in `Table 1`).
+
+| Na+   | Cl-   | Ar    | OH-   | HF    | LiH(f) | BeH2(f) | LiH    | H2O    | SYK 1 | SYK 2 | BeH2   |
+|-------|-------|-------|-------|-------|--------|---------|--------|--------|-------|-------|--------|
+| 0.8 h | 1 h   | 1.65 h | 5.1 h | 24.7 h | 1.3 h  | 7 day  | 2.6 day | 10 day | 1.24  h | 3.44 h | 3.5 day |
 
 **Incrementally Gathering the Data**: We support incrementally collecting the samples for Figure 14. Please refer to `exp.py` in the `src/Overall Parallel/` folder.
 
