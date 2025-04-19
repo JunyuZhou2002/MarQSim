@@ -54,7 +54,7 @@ This section shows how to obtain result for each figure/table from the MarQSim p
 
 **Tables2**: Execute `python3 exp.py --experiment=time` under folder `src`. The output: `result.txt` will be placed in the different directories under `src/Compilation_Time/`, with different qubit/Pauli string number combination (`Pauli_x_y` refers to a Hamiltonian with x qubits and y Pauli strings).
 
-**Note**: You can also copy and paste each command string from the experiment list in `exp.py` and execute them individually. This approach also displays a process indicator that reflects the progress of the sampling process.
+**Note**: You can also use each command string from the experiment list in `exp.py` and execute them individually. This approach also displays a process indicator that reflects the progress of the sampling process.
 
 ## Code Structure
 
