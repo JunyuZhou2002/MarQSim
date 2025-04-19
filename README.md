@@ -44,7 +44,7 @@ This section shows how to obtain result for each figure/table from the MarQSim p
 |-------|-------|-------|-------|-------|--------|---------|--------|--------|-------|-------|--------|
 | 0.8 h | 1 h   | 1.65 h | 5.1 h | 24.7 h | 1.3 h  | 7 day  | 2.6 day | 10 day | 1.24  h | 3.44 h | 3.5 day |
 
-**Incrementally Gathering the Data**: We support incrementally collecting the samples for Figure 14. Please refer to `exp.py` in the `src/Overall Parallel/` folder.
+**Incrementally Gathering the Data**: We support incrementally collecting the samples for Figure 14. Please refer to `exp.py`.
 
 **Figure 15**: Execute `src/Varying Transition Matrix Combination/exp.py`. The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Varying Transition Matrix Combination/`, with different molecule/ion names on it.
 
