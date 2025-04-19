@@ -65,3 +65,4 @@ This section shows how to obtain result for each figure/table from the MarQSim p
 
 
 ## Simulating New Molecule/Ion
+To simulate new elements, prepare their Hamiltonian information following the examples in the Benchmarks folder. Then, invoke the operation function in `marqsim.py` with your desired parameters (e.g., evolution time, precision, transition matrix combination ratio, etc.).
