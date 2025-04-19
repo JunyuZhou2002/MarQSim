@@ -46,14 +46,15 @@ This section shows how to obtain result for each figure/table from the MarQSim p
 
 **Incrementally Gathering the Data**: We support incrementally collecting the samples for Figure 14. Please refer to `exp.py`.
 
-**Figure 15**: Execute `src/Varying Transition Matrix Combination/exp.py`. The output: `result.txt` and `photo.png` will be placed in the different directories under `src/Varying Transition Matrix Combination/`, with different molecule/ion names on it.
+**Figure 15**: Execute `python3 exp.py --experiment=varying` under folder `src`. The output: `result.txt` and `result.png` will be placed in the different directories under `src/Varying_Combination/`, with different molecule/ion names on it.
 
-**Figure 16**: Execute `src/Matrix Spectra/exp.py`. The graph output will be placed in the same directory.
+**Figure 16**: Execute `python3 exp.py --experiment=spectra` under folder `src`. The graph output will be placed under `src/Matrix_Spectra/`.
 
-**Figure 17**: Execute `src/Impact of Evolution Time/exp.py`. The output will be placed in the different directories under `src/Impact of Evolution Time/`, with different molecule/ion names on it. The file `result1.txt`/`photo1.png`, `result2.txt`/`photo2.png`, `result3.txt`/`photo3.png`, and `result4.txt`/`photo4.png` corresponding to evolution time $\pi/6$, $\pi/3$, $\pi/2$, and $3*\pi/4$ respectively.
+**Figure 17**: Execute `python3 exp.py --experiment=evol` under folder `src`. The output will be placed in the different directories under `src/Evolution_Time_Impact/`, with different molecule/ion names on it. The end of filename `result***.txt`/`result***.png` will indicate the corresponding to evolution time $\pi/6$, $\pi/3$, $\pi/2$, and $3*\pi/4$ respectively.
 
+**Tables2**: Execute `python3 exp.py --experiment=time` under folder `src`. The output: `result.txt` will be placed in the different directories under `src/Compilation_Time/`, with different qubit/Pauli string number combination (`Pauli_x_y` refers to a Hamiltonian with x qubits and y Pauli strings).
 
-**Tables2**: Execute `src/Compilation Time/exp.py`. The output: `result.txt` will be placed in the different directories under `src/Compilation Time/`, with different qubit/Pauli string number combination (`Pauli_x_y` refers to a Hamiltonian with x qubits and y Pauli strings).
+**Note**: You can also copy and paste each command string from the experiment list in `exp.py` and execute them individually. This approach also displays a process indicator that reflects the progress of the sampling process.
 
 ## Code Structure
 
