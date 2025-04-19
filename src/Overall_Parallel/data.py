@@ -1,3 +1,21 @@
+### To process the data in "result.csv", run the following command.
+### This will generate figures in each corresponding folder as before,
+### and the reduction rates will be saved in a file named "reduction.txt".
+'''
+    "python3 data.py --file=Pauli_Na+ --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=10.456",
+    "python3 data.py --file=Pauli_Cl- --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=11.13",
+    "python3 data.py --file=Pauli_Ar --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=14.61",
+    "python3 data.py --file=Pauli_SYK1 --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=104.14",
+    "python3 data.py --file=Pauli_SYK2 --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=108.41",
+    "python3 data.py --file=Pauli_OH- --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=18.58",
+    "python3 data.py --file=Pauli_HF --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=24.43",
+    "python3 data.py --file=Pauli_LiH_f --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=8.89",
+    "python3 data.py --file=Pauli_BeH2_f --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=21.49",
+    "python3 data.py --file=Pauli_LiH_unf --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=12.34",
+    "python3 data.py --file=Pauli_H2O --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=27.16",
+    "python3 data.py --file=Pauli_BeH2_unf --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --execute_time=0.785 --h_sum=21.49"
+'''
+
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
@@ -8,12 +26,17 @@ file = sys.stdout
 
 import argparse
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description="MarQSim Compiler Experiment Settings")
+# Path to the Pauli string input file 
+parser.add_argument('--file', help='Path to the Pauli string input file.')
+# List of epsilon values 
+# Should be a string like "0.1,0.01" and will be parsed into a list of floats
+parser.add_argument('--epsilon_list_1', help='Comma-separated list of epsilon values.')
+# Evolution time `t` in the simulation
+parser.add_argument('--execute_time', type=float, help='Total evolution time t.')
+# Precomputed or supplied sum of absolute Hamiltonian coefficients
+parser.add_argument('--h_sum', type=float, help='Sum of absolute Hamiltonian weights.')
 
-parser.add_argument('--file')
-parser.add_argument('--epsilon_list_1')
-parser.add_argument('--excute_time', type=float)
-parser.add_argument('--h_sum', type=float)
 args = parser.parse_args()
 
 
@@ -22,7 +45,7 @@ epsilon_list_1 = epsilon_list_1.split(',')
 epsilon_list = []
 for epsilon_str in epsilon_list_1:
     epsilon_list.append(float(epsilon_str))
-excute_time = args.excute_time
+execute_time = args.execute_time
 h_sum = args.h_sum
 
 file_name = args.file + '//' + 'result' + '.csv'
@@ -84,7 +107,7 @@ def drop_min_elements(nums):
 def model_function(x, a, b, c):
     return a + np.exp(b*x+c)
 
-total_numses = total_data(CNOT_numses, single_q_numses, epsilon_list, excute_time, h_sum)
+total_numses = total_data(CNOT_numses, single_q_numses, epsilon_list, execute_time, h_sum)
 # CNOT_numses = single_q_numses
 
 
@@ -192,8 +215,3 @@ plt.xlabel('Accuracy', fontsize=20)
 plt.ylabel('CNOT Gate Count', fontsize=20)
 plt.legend(loc='upper left', fontsize=20)
 plt.savefig(args.file + '//photo' + '.png')
-
-# commend line
-'''
-python data.py --file=Pauli_Na+ --epsilon_list_1=0.1,0.067,0.05,0.04,0.033,0.0286,0.025 --excute_time=0.785 --h_sum=10.456
-'''
