@@ -19,7 +19,7 @@ Artifact for paper _MarQSim: Reconciling Determinism and Randomness in Compiler 
 
 ## Setup
 
-We will use Python virtual environment together with Jupyter notebook. To set up and activate the virtual environment:
+We will use Python virtual environment. To set up and activate the virtual environment:
 
 ```bash
 python3 -m venv venv
@@ -32,7 +32,7 @@ Then, install necessary Python packages:
 pip3 install -r requirements.txt
 ```
 
-You can now use your favorite Jupyter notebook frontend to execute the code (vscode, browser, etc.)
+You can now use your favorite frontend to execute the code (vscode, browser, etc.)
 
 ## Results
 
